@@ -1,25 +1,23 @@
 package Interface;
 
 import util.ClassePizza;
+import util.TipoDeBebida;
 import util.TipoDePizza;
-
 import java.util.Arrays;
 
-public abstract class Pizzas {
+public abstract class Bebidas {
 
     private static final long serialVersionUID = 1L;
     private int id = 0;
     private static int nextId = 1;
     private String nome;
     private double valor;
-    protected TipoDePizza tipoDePizza;
-    protected ClassePizza classePizza;
-    protected String[] ingredientes;
+    protected TipoDeBebida tipoDeBebida;
 
-    public Pizzas(String nome){
+    public Bebidas(String nome, double valorPadrao){
         this.id = nextId++;
         this.nome = nome;
-        this.valor = 36.00;
+        this.valor = valorPadrao;
     }
 
     public String toString() {
@@ -27,7 +25,6 @@ public abstract class Pizzas {
                 "id=" + id +
                 ", nome='" + nome + '\'' +
                 ", valor=" + getValor() +
-                ", ingredientes=" + Arrays.toString(ingredientes) +
                 '}';
     }
 
@@ -36,11 +33,8 @@ public abstract class Pizzas {
     }
 
     public double getValor() {
-        return valor + classePizza.getValorPadrao();
+        return valor;
     }
 
-    public String[] getIngredientes() {
-        return ingredientes;
-    }
 }
 

@@ -1,4 +1,4 @@
-package Interface;
+package util;
 
 public enum TipoDePizza {
     Doce,

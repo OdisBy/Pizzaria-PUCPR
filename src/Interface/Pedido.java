@@ -1,9 +1,11 @@
 package Interface;
 
+import util.TamanhoPizza;
+import util.ClassePizza;
+
 public class Pedido {
     private Pizzas pizza;
     private TamanhoPizza tamanho;
-
     private double valor;
 
     public Pedido(Pizzas pizza, TamanhoPizza tamanho) {
