@@ -1,7 +1,8 @@
 package model;
 
 import Interface.Pizzas;
-import Interface.TipoDePizza;
+import util.ClassePizza;
+import util.TipoDePizza;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -9,105 +10,118 @@ import java.util.List;
 public class Pizzas_Salgadas {
     public static class Strogonoff_Frango extends Pizzas {
         public Strogonoff_Frango() {
-            super("Strogonoff de frango", 46.00);
+            super("Strogonoff de frango");
             this.tipoDePizza = TipoDePizza.Salgada;
             this.ingredientes = new String[]{"Frango desfiado", "Catupiry", "Molho", "Batata palha", "Orégano"};
+            this.classePizza = ClassePizza.Premium;
         }
     }
 
     public static class Strogonoff_Carne extends Pizzas {
         public Strogonoff_Carne() {
-            super("Strogonoff de carne", 46.00);
+            super("Strogonoff de carne");
             this.tipoDePizza = TipoDePizza.Salgada;
             this.ingredientes = new String[]{"Carne", "Molho", "Batata palha", "Orégano"};
+            this.classePizza = ClassePizza.Premium;
         }
     }
 
     public static class Calabresa extends Pizzas {
         public Calabresa() {
-            super("Calabresa", 36.00);
+            super("Calabresa");
             this.tipoDePizza = TipoDePizza.Salgada;
             this.ingredientes = new String[]{"Calabresa", "Muçarela"};
+            this.classePizza = ClassePizza.Tradicional;
         }
     }
 
     public static class Calabresa_Cheedar extends Pizzas {
         public Calabresa_Cheedar() {
-            super("Calabresa Cheedar", 36.00);
+            super("Calabresa Cheedar");
             this.tipoDePizza = TipoDePizza.Salgada;
             this.ingredientes = new String[]{"Calabresa", "Muçarela", "Cheddar"};
+            this.classePizza = ClassePizza.Tradicional;
         }
     }
 
     public static class Marguerita extends Pizzas {
         public Marguerita() {
-            super("Marguerita", 36.00);
+            super("Marguerita");
             this.tipoDePizza = TipoDePizza.Salgada;
             this.ingredientes = new String[]{"Muçarela", "Manjericão", "Tomate"};
+            this.classePizza = ClassePizza.Tradicional;
         }
     }
 
     public static class Frango_Catupiry extends Pizzas {
         public Frango_Catupiry() {
-            super("Frango com catupiry", 36.00);
+            super("Frango com catupiry");
             this.tipoDePizza = TipoDePizza.Salgada;
             this.ingredientes = new String[]{"Frango", "Muçarela", "Catupiry"};
+            this.classePizza = ClassePizza.Tradicional;
         }
     }
 
     public static class Frango_Cheddar extends Pizzas {
         public Frango_Cheddar() {
-            super("Frango com cheddar", 36.00);
+            super("Frango com cheddar");
             this.tipoDePizza = TipoDePizza.Salgada;
             this.ingredientes = new String[]{"Frango", "Muçarela", "Cheddar"};
+            this.classePizza = ClassePizza.Tradicional;
         }
     }
 
     public static class Champignon extends Pizzas {
         public Champignon() {
-            super("Champignon", 36.00);
+            super("Champignon");
             this.tipoDePizza = TipoDePizza.Salgada;
             this.ingredientes = new String[]{"Muçarela", "Champignon"};
+            this.classePizza = ClassePizza.Tradicional;
         }
     }
 
     public static class Quatro_Queijos extends Pizzas {
         public Quatro_Queijos() {
-            super("4 Queijos", 36.00);
+            super("4 Queijos");
             this.tipoDePizza = TipoDePizza.Salgada;
             this.ingredientes = new String[]{"Muçarela", "Parmesão", "Provolone", "Catupiry"};
+            this.classePizza = ClassePizza.Tradicional;
         }
     }
 
     public static class Bacon extends Pizzas {
         public Bacon() {
-            super("Bacon", 36.00);
+            super("Bacon");
             this.tipoDePizza = TipoDePizza.Salgada;
             this.ingredientes = new String[]{"Muçarela", "Bacon", "Orégano"};
+            this.classePizza = ClassePizza.Tradicional;
         }
     }
 
     public static class Milho_Bacon extends Pizzas {
         public Milho_Bacon() {
-            super("Milho com bacon", 36.00);
+            super("Milho com bacon");
             this.tipoDePizza = TipoDePizza.Salgada;
             this.ingredientes = new String[]{"Muçarela", "Bacon", "Milho"};
+            this.classePizza = ClassePizza.Tradicional;
         }
     }
 
     public static class Milho extends Pizzas {
         public Milho() {
-            super("Milho", 36.00);
+            super("Milho");
             this.tipoDePizza = TipoDePizza.Salgada;
             this.ingredientes = new String[]{"Muçarela", "Milho"};
+            this.classePizza = ClassePizza.Tradicional;
         }
     }
 
     public static class Portuguesa extends Pizzas {
         public Portuguesa() {
-            super("Portuguesa", 36.00);
+            super("Portuguesa");
             this.tipoDePizza = TipoDePizza.Salgada;
             this.ingredientes = new String[]{"Muçarela", "Presunto", "Cebola", "Ovos", "Azeitona"};
+            this.classePizza = ClassePizza.Tradicional;
         }
     }
 
