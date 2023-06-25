@@ -1,6 +1,7 @@
 import Interface.Pedido;
 import Interface.Pizzas;
 import model.Pizzas_Salgadas;
+import ui.CardapioGUI;
 import ui.Home;
 import util.ClassePizza;
 import util.TamanhoPizza;
@@ -17,8 +18,11 @@ public class App {
 //        Pedido pedido = new Pedido(new Pizzas_Salgadas.Quatro_Queijos(), TamanhoPizza.Big);
 //
 //        System.out.println(pedido.getValor());
+//
+//        Home homeUi = new Home();
+//        homeUi.homeUiSetup();
 
-        Home homeUi = new Home();
-        homeUi.homeUiShow();
+        CardapioGUI cardapioGUI = new CardapioGUI();
+        cardapioGUI.setVisible(true);
     }
 }
