@@ -1,4 +1,4 @@
-import ui.Pedidos;
+import ui.PedidosGUI;
 
 public class App {
     public static void main(String[] args) {
@@ -16,7 +16,7 @@ public class App {
 //        CardapioGUI cardapioGUI = new CardapioGUI();
 //        cardapioGUI.setVisible(true);
 
-        Pedidos pedidos = new Pedidos();
+        PedidosGUI pedidos = new PedidosGUI();
         pedidos.setVisible(true);
     }
 }

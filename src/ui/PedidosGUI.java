@@ -1,23 +1,14 @@
 package ui;
 
-import data.DataBebidas;
-import data.DataPizzas;
-
 import javax.swing.*;
-import javax.swing.border.EmptyBorder;
-import javax.swing.event.ListSelectionEvent;
-import javax.swing.event.ListSelectionListener;
-import javax.swing.table.TableColumn;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.util.Objects;
 
-public class HomeGUI extends JFrame {
+public class PedidosGUI extends JFrame {
     private CardapioGUI cardapioGUI;
-    private PedidosGUI pedidosGUI;
+    private HomeGUI homeGUI;
 
-    public HomeGUI() {
+    public PedidosGUI() {
         super("Pizzaria da PUCPR");
         initComponents();
         setupGUI();
@@ -43,7 +34,12 @@ public class HomeGUI extends JFrame {
         homeButton.setContentAreaFilled(false);
         homeButton.setText("");
         homeButton.setIcon(homeIcon);
-        homeButton.setEnabled(false);
+        homeButton.setEnabled(true);
+        homeButton.addActionListener(e -> {
+            homeGUI = new HomeGUI();
+            this.setVisible(false);
+            homeGUI.setVisible(true);
+        });
         navigationPanel.add(homeButton);
 
 
@@ -70,11 +66,7 @@ public class HomeGUI extends JFrame {
         pedidosButton.setContentAreaFilled(false);
         pedidosButton.setText("");
         pedidosButton.setIcon(pedidosIcon);
-        pedidosButton.addActionListener(e -> {
-            pedidosGUI = new PedidosGUI();
-            this.setVisible(false);
-            pedidosGUI.setVisible(true);
-        });
+        pedidosButton.setEnabled(false);
         navigationPanel.add(pedidosButton);
 
         JPanel menuPanel = new JPanel(new GridBagLayout());

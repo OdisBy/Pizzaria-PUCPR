@@ -21,6 +21,7 @@ import javax.swing.table.TableColumn;
 
 public class CardapioGUI extends JFrame {
     private HomeGUI homeUi = new HomeGUI();
+    private PedidosGUI pedidosGUI;
     private Pedido pedidoAtual;
 
 
@@ -87,9 +88,10 @@ public class CardapioGUI extends JFrame {
         pedidosButton.setText("");
         pedidosButton.setIcon(pedidosIcon);
         pedidosButton.addActionListener(e -> {
-//            JOptionPane.showMessageDialog(this, "Clicou no botão Pedidos");
-            Pedido pedido = Pedido.loadData(2);
-
+//            Pedido pedido = Pedido.loadData(2);
+            pedidosGUI = new PedidosGUI();
+            this.setVisible(false);
+            pedidosGUI.setVisible(true);
         });
         navigationPanel.add(pedidosButton);
 
