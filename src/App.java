@@ -22,7 +22,6 @@ public class App {
 //
 //        Home homeUi = new Home();
 //        homeUi.homeUiSetup();
-
 //        CardapioGUI cardapioGUI = new CardapioGUI();
 //        cardapioGUI.setVisible(true);
 

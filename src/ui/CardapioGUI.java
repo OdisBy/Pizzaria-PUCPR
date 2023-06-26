@@ -2,7 +2,6 @@ package ui;
 
 import Interface.Pizzas;
 import model.Pizzas_Salgadas;
-
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
@@ -159,7 +158,6 @@ public class CardapioGUI extends JFrame {
         controlPanel.add(finalizarButton);
 
         menuPanel.add(controlPanel, BorderLayout.SOUTH);
-
     }
 
     private void finalizarPedido(MenuTableModel model) {
