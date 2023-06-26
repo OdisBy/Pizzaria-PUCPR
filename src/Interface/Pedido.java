@@ -1,5 +1,6 @@
 package Interface;
 
+import util.PedidosStatus;
 import util.TamanhoPizza;
 import util.ClassePizza;
 
@@ -15,6 +16,7 @@ public class Pedido implements Serializable {
     private List<ItemCarrinho> itens;
     private double valorTotal;
     private LocalDateTime createdAt;
+    private PedidosStatus pedidosStatus;
 
     public Pedido(List<ItemCarrinho> itens) {
         this.id = getNextFileId();
@@ -96,25 +98,53 @@ public class Pedido implements Serializable {
 
         return maxId + 1;
     }
-    public static Pedido loadData(int id) {
-        String saveFolder = "saves";
-        String fileName = saveFolder + "/pedido_" + id + ".dat";
-        Pedido pedido = null;
+        public static Object[][] loadAllData() {
+            String saveFolder = "saves";
+            List<Object[]> data = new ArrayList<>();
 
-        try (FileInputStream fileInputStream = new FileInputStream(fileName);
-             ObjectInputStream objectInputStream = new ObjectInputStream(fileInputStream)) {
-            pedido = (Pedido) objectInputStream.readObject();
+            File folder = new File(saveFolder);
+            File[] files = folder.listFiles();
+            if (files != null) {
+                for (File file : files) {
+                    if (file.isFile() && file.getName().startsWith("pedido_") && file.getName().endsWith(".dat")) {
+                        Pedido pedido = null;
 
-            System.out.println(pedido.valorTotal);
-            System.out.println("Dados do pedido foram carregados com sucesso do arquivo: " + fileName);
-        } catch (FileNotFoundException e) {
-            System.out.println("Arquivo não encontrado: " + e.getMessage());
-        } catch (IOException e) {
-            System.out.println("Erro ao ler os dados do pedido do arquivo: " + e.getMessage());
-        } catch (ClassNotFoundException e) {
-            System.out.println("Classe não encontrada ao carregar os dados do pedido: " + e.getMessage());
+                        try (FileInputStream fileInputStream = new FileInputStream(file);
+                             ObjectInputStream objectInputStream = new ObjectInputStream(fileInputStream)) {
+                            pedido = (Pedido) objectInputStream.readObject();
+                            Object[] row = {
+                                    pedido.getId(),
+                                    pedido.getItens(),
+                                    pedido.getValorTotal(),
+                                    pedido.getStatus()
+                            };
+                            data.add(row);
+                        } catch (FileNotFoundException e) {
+                            System.out.println("Arquivo não encontrado: " + e.getMessage());
+                        } catch (IOException e) {
+                            System.out.println("Erro ao ler os dados do pedido do arquivo: " + e.getMessage());
+                        } catch (ClassNotFoundException e) {
+                            System.out.println("Classe não encontrada ao carregar os dados do pedido: " + e.getMessage());
+                        }
+                    }
+                }
+            }
+
+            if (data.isEmpty()) {
+                System.out.println("Nenhum pedido encontrado.");
+            } else {
+                System.out.println("Foram encontrados " + data.size() + " pedidos.");
+            }
+
+            Object[][] dataArray = new Object[data.size()][];
+            for (int i = 0; i < data.size(); i++) {
+                dataArray[i] = data.get(i);
+            }
+
+            return dataArray;
         }
 
-        return pedido;
+    private PedidosStatus getStatus() {
+        return this.pedidosStatus;
     }
 }
