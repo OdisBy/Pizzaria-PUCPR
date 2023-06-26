@@ -365,7 +365,7 @@ public class CardapioGUI extends JFrame {
         });
     }
 
-    public static class MenuTableModel extends AbstractTableModel {
+    public class MenuTableModel extends AbstractTableModel {
 
         private String[] columnNames;
         private Object[][] data;

@@ -1,8 +1,10 @@
 package ui;
 
+import Interface.Pedido;
 import data.DataPizzas;
 
 import javax.swing.*;
+import javax.swing.table.AbstractTableModel;
 import javax.swing.table.TableColumn;
 import java.awt.*;
 import java.util.Objects;
@@ -79,9 +81,9 @@ public class PedidosGUI extends JFrame {
         menuLabel.setFont(new Font("Arial", Font.BOLD, 24));
         menuPanel.add(menuLabel, BorderLayout.NORTH);
 
-        Object[][] pedidosData = DataPizzas.cardapioParaTable();
+        Object[][] pedidosData = Pedido.loadAllData();
         String[] pedidosColumnNames = {"ID", "Pedido", "Valor", "Criado", "Status"};
-        CardapioGUI.MenuTableModel pedidosModel = new CardapioGUI.MenuTableModel(pedidosData, pedidosColumnNames);
+        MenuTableModel pedidosModel = new MenuTableModel(pedidosData, pedidosColumnNames);
         JTable pedidosTable = new JTable(pedidosModel);
 
 
@@ -98,10 +100,12 @@ public class PedidosGUI extends JFrame {
         TableColumn columnCreated = pedidosTable.getColumnModel().getColumn(3);
         columnCreated.setPreferredWidth(10);
 
-        TableColumn columnStatus = pedidosTable.getColumnModel().getColumn(3);
+        TableColumn columnStatus = pedidosTable.getColumnModel().getColumn(4);
         columnStatus.setPreferredWidth(50);
 
         pedidosTable.setRowHeight(pedidosTable.getRowHeight() * 4);
+
+        menuPanel.add(pedidosTable);
     }
     @SuppressWarnings("unchecked")
     private void initComponents() {
@@ -130,7 +134,7 @@ public class PedidosGUI extends JFrame {
             }
         } catch (ClassNotFoundException | InstantiationException | IllegalAccessException |
                  UnsupportedLookAndFeelException ex) {
-            java.util.logging.Logger.getLogger(CardapioGUI.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(PedidosGUI.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         }
 
         java.awt.EventQueue.invokeLater(new Runnable() {
@@ -138,5 +142,42 @@ public class PedidosGUI extends JFrame {
                 new HomeGUI().setVisible(true);
             }
         });
+    }
+
+    public class MenuTableModel extends AbstractTableModel {
+
+        private String[] columnNames;
+        private Object[][] data;
+
+        public MenuTableModel(Object[][] data, String[] columnNames) {
+            this.data = data;
+            this.columnNames = columnNames;
+        }
+
+        @Override
+        public int getRowCount() {
+            return data.length;
+        }
+
+        @Override
+        public int getColumnCount() {
+            return columnNames.length;
+        }
+
+        @Override
+        public Object getValueAt(int row, int column) {
+            return data[row][column];
+        }
+
+        @Override
+        public String getColumnName(int column) {
+            return columnNames[column];
+        }
+
+        @Override
+        public boolean isCellEditable(int row, int column) {
+            return false;
+        }
+
     }
 }
