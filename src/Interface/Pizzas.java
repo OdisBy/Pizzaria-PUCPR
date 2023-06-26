@@ -46,13 +46,14 @@ public abstract class Pizzas {
     }
 
     public static Object[][] getPizzasSalgadas() {
-        List<Pizzas> pizzasSalgadas = Pizzas_Salgadas.PizzasFactory.criarCardapio();
-        Object[][] data = new Object[pizzasSalgadas.size()][4];
+        List<Pizzas> cardapio = Pizzas_Salgadas.PizzasFactory.criarCardapio();
+        int numPizzas = cardapio.size();
+        Object[][] data = new Object[numPizzas][4];
 
-        for (int i = 0; i < pizzasSalgadas.size(); i++) {
-            Pizzas pizza = pizzasSalgadas.get(i);
+        for (int i = 0; i < numPizzas; i++) {
+            Pizzas pizza = cardapio.get(i);
             data[i][0] = pizza.getNome();
-            data[i][1] = pizza.getIngredientes();
+            data[i][1] = String.join(", ", pizza.getIngredientes());
             data[i][2] = pizza.getValor();
             data[i][3] = 0;
         }
