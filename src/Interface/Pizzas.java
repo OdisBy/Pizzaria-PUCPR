@@ -1,9 +1,11 @@
 package Interface;
 
+import model.Pizzas_Salgadas;
 import util.ClassePizza;
 import util.TipoDePizza;
 
 import java.util.Arrays;
+import java.util.List;
 
 public abstract class Pizzas {
 
@@ -41,6 +43,21 @@ public abstract class Pizzas {
 
     public String[] getIngredientes() {
         return ingredientes;
+    }
+
+    public static Object[][] getPizzasSalgadas() {
+        List<Pizzas> pizzasSalgadas = Pizzas_Salgadas.PizzasFactory.criarCardapio();
+        Object[][] data = new Object[pizzasSalgadas.size()][4];
+
+        for (int i = 0; i < pizzasSalgadas.size(); i++) {
+            Pizzas pizza = pizzasSalgadas.get(i);
+            data[i][0] = pizza.getNome();
+            data[i][1] = pizza.getIngredientes();
+            data[i][2] = pizza.getValor();
+            data[i][3] = 0;
+        }
+
+        return data;
     }
 }
 

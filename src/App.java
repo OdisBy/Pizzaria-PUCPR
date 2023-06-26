@@ -3,6 +3,7 @@ import Interface.Pizzas;
 import model.Pizzas_Salgadas;
 import ui.CardapioGUI;
 import ui.Home;
+import ui.Pedidos;
 import util.ClassePizza;
 import util.TamanhoPizza;
 
@@ -21,8 +22,10 @@ public class App {
 //
 //        Home homeUi = new Home();
 //        homeUi.homeUiSetup();
+//        CardapioGUI cardapioGUI = new CardapioGUI();
+//        cardapioGUI.setVisible(true);
 
-        CardapioGUI cardapioGUI = new CardapioGUI();
-        cardapioGUI.setVisible(true);
+        Pedidos pedidos = new Pedidos();
+        pedidos.setVisible(true);
     }
 }

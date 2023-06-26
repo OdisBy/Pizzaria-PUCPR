@@ -1,5 +1,7 @@
 package ui;
 
+import Interface.Pizzas;
+import model.Pizzas_Salgadas;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
@@ -22,6 +24,10 @@ public class CardapioGUI extends JFrame {
         initComponents();
         setupGUI();
     }
+    private ArrayList<String> carrinho = new ArrayList<>();
+    private JTextArea pedidosTextArea;
+
+    private Pizzas pizzas;
 
     private void setupGUI() {
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -84,12 +90,7 @@ public class CardapioGUI extends JFrame {
         menuPanel.add(menuLabel, BorderLayout.NORTH);
 
         // dados
-        Object[][] data = {
-                {"Margherita", "Molho de tomate, queijo mozarela, manjericão", 20.00, 0},
-                {"Calabresa", "Molho de tomate, queijo mozarela, calabresa", 22.00, 0},
-                {"Quatro Queijos", "Molho de tomate, queijo mozarela, queijo cheddar, queijo provolone, queijo parmesão", 25.00, 0},
-                {"Frango com Catupiry", "Molho de tomate, queijo mozarela, frango desfiado, catupiry", 23.00, 0}
-        };
+        Object[][] data = Pizzas.getPizzasSalgadas();
 
 
         MenuTableModel model = new MenuTableModel(data);
@@ -160,23 +161,69 @@ public class CardapioGUI extends JFrame {
     }
 
     private void finalizarPedido(MenuTableModel model) {
-        ArrayList pizzasSelecionadas = new ArrayList();
+        carrinho.clear();
 
         // Iterar sobre os dados do modelo
         for (int row = 0; row < model.getRowCount(); row++) {
             int quantidade = (int) model.getValueAt(row, 3); // Obtém a quantidade da coluna "Quantidade"
             if (quantidade > 0) {
                 String pizza = (String) model.getValueAt(row, 0); // Obtém o nome da pizza da coluna "Pizza"
-                pizzasSelecionadas.add(pizza);
+                carrinho.add(pizza); // Adiciona a pizza ao array de pizzas selecionadas
             }
         }
 
-        // Exibir os nomes das pizzas selecionadas
-        String mensagem = "Pizzas selecionadas:";
-        for (Object pizza : pizzasSelecionadas) {
-            mensagem += "\n- " + pizza;
+        exibirPedidos();
+    }
+
+    private void exibirPedidos() {
+        JFrame pedidosFrame = new JFrame("Pedidos");
+        pedidosFrame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+        pedidosFrame.setSize(400, 300);
+        pedidosFrame.setLocationRelativeTo(this);
+
+        pedidosTextArea = new JTextArea();
+        pedidosTextArea.setEditable(false);
+
+        JScrollPane scrollPane = new JScrollPane(pedidosTextArea);
+        pedidosFrame.add(scrollPane, BorderLayout.CENTER);
+
+        JPanel botoesPanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
+
+        JButton editarPedidoButton = new JButton("Editar Pedido");
+        editarPedidoButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                pedidosFrame.dispose();
+            }
+        });
+        botoesPanel.add(editarPedidoButton);
+
+        JButton pagarButton = new JButton("Pagar");
+        pagarButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                RedirectPedidos();
+            }
+        });
+        botoesPanel.add(pagarButton);
+
+        pedidosFrame.add(botoesPanel, BorderLayout.SOUTH);
+        StringBuilder pedidosText = new StringBuilder();
+        for (String pizza : carrinho) {
+            pedidosText.append("- ").append(pizza).append("\n");
         }
-        JOptionPane.showMessageDialog(CardapioGUI.this, mensagem);
+        pedidosTextArea.setText(pedidosText.toString());
+
+        pedidosFrame.setVisible(true);
+    }
+
+    private void RedirectPedidos() {
+        JFrame acompanharFrame = new JFrame("Acompanhar");
+        acompanharFrame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+        acompanharFrame.setSize(400, 300);
+        acompanharFrame.setLocationRelativeTo(this);
+
+        acompanharFrame.setVisible(true);
     }
 
     @SuppressWarnings("unchecked")
