@@ -1,6 +1,9 @@
 package ui;
 
+import data.DataPizzas;
+
 import javax.swing.*;
+import javax.swing.table.TableColumn;
 import java.awt.*;
 import java.util.Objects;
 
@@ -69,19 +72,36 @@ public class PedidosGUI extends JFrame {
         pedidosButton.setEnabled(false);
         navigationPanel.add(pedidosButton);
 
-        JPanel menuPanel = new JPanel(new GridBagLayout());
+        JPanel menuPanel = new JPanel(new BorderLayout());
         contentPane.add(menuPanel, BorderLayout.CENTER);
 
-        JLabel titleLabel = new JLabel("<html>Pizzaria da PUCPR<br>A pizza que te fará passar de ano</html>", SwingConstants.CENTER);
-        titleLabel.setFont(new Font("Arial", Font.BOLD, 24));
-        GridBagConstraints gbc = new GridBagConstraints();
-        gbc.gridx = 0;
-        gbc.gridy = 0;
-        gbc.weightx = 1.0;
-        gbc.weighty = 1.0;
-        gbc.fill = GridBagConstraints.BOTH;
-        gbc.anchor = GridBagConstraints.CENTER; // Centralizar verticalmente
-        menuPanel.add(titleLabel, gbc);
+        JLabel menuLabel = new JLabel("Pedidos", SwingConstants.CENTER);
+        menuLabel.setFont(new Font("Arial", Font.BOLD, 24));
+        menuPanel.add(menuLabel, BorderLayout.NORTH);
+
+        Object[][] pedidosData = DataPizzas.cardapioParaTable();
+        String[] pedidosColumnNames = {"ID", "Pedido", "Valor", "Criado", "Status"};
+        CardapioGUI.MenuTableModel pedidosModel = new CardapioGUI.MenuTableModel(pedidosData, pedidosColumnNames);
+        JTable pedidosTable = new JTable(pedidosModel);
+
+
+        TableColumn columnId = pedidosTable.getColumnModel().getColumn(0);
+        columnId.setPreferredWidth(5);
+
+        TableColumn columnPedido = pedidosTable.getColumnModel().getColumn(1);
+        columnPedido.setPreferredWidth(450);
+
+
+        TableColumn columnValor = pedidosTable.getColumnModel().getColumn(2);
+        columnValor.setPreferredWidth(5);
+
+        TableColumn columnCreated = pedidosTable.getColumnModel().getColumn(3);
+        columnCreated.setPreferredWidth(10);
+
+        TableColumn columnStatus = pedidosTable.getColumnModel().getColumn(3);
+        columnStatus.setPreferredWidth(50);
+
+        pedidosTable.setRowHeight(pedidosTable.getRowHeight() * 4);
     }
     @SuppressWarnings("unchecked")
     private void initComponents() {

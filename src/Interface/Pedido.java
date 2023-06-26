@@ -5,22 +5,22 @@ import util.ClassePizza;
 
 import java.io.*;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
 public class Pedido implements Serializable {
     private static final long serialVersionUID = 1L;
-    private static int proximoId = 1; // Variável estática para controlar o próximo ID
     private int id;
     private List<ItemCarrinho> itens;
     private double valorTotal;
-    private LocalDate createdAt;
+    private LocalDateTime createdAt;
 
     public Pedido(List<ItemCarrinho> itens) {
-        this.id = proximoId++;
+        this.id = getNextFileId();
         this.itens = new ArrayList<>(itens);
         this.valorTotal = calcularValorTotal();
-        this.createdAt = LocalDate.now();
+        this.createdAt = LocalDateTime.now();
     }
     public Pedido() {
     }
@@ -37,7 +37,7 @@ public class Pedido implements Serializable {
         return valorTotal;
     }
 
-    public LocalDate getDataCriacao() {
+    public LocalDateTime getDataCriacao() {
         return createdAt;
     }
 

@@ -73,10 +73,6 @@ public class CardapioGUI extends JFrame {
         cardapioButton.setContentAreaFilled(false);
         cardapioButton.setText("");
         cardapioButton.setIcon(cardapioIcon);
-
-        cardapioButton.addActionListener(e -> {
-            JOptionPane.showMessageDialog(this, "Clicou no botão Cardápio");
-        });
         cardapioButton.setEnabled(false);
         navigationPanel.add(cardapioButton);
 
@@ -325,13 +321,6 @@ public class CardapioGUI extends JFrame {
     }
 
     private void RedirectPedidos() {
-//        JFrame acompanharFrame = new JFrame("Acompanhar");
-//        acompanharFrame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-//        acompanharFrame.setSize(400, 300);
-//        acompanharFrame.setLocationRelativeTo(this);
-//
-//        acompanharFrame.setVisible(true);
-
         pedidoAtual = new Pedido(carrinho);
         ArrayList<ItemCarrinho> pedidos = pedidoAtual.getItens();
         System.out.println(pedidoAtual.getValorTotal());
@@ -376,7 +365,7 @@ public class CardapioGUI extends JFrame {
         });
     }
 
-    public class MenuTableModel extends AbstractTableModel {
+    public static class MenuTableModel extends AbstractTableModel {
 
         private String[] columnNames;
         private Object[][] data;
