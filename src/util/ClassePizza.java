@@ -1,9 +1,10 @@
 package util;
 
 public enum ClassePizza {
-    Promocao(0.00),
-    Tradicional(2.00),
-    Premium(10.00);
+    PromocaoTradicional(21.00),
+    PromocaoDoce(12.00),
+    Tradicional(36.00),
+    Premium(45.00);
 
     private double valorPadrao;
 

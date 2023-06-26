@@ -1,64 +1,42 @@
 package Interface;
 
-import model.Pizzas_Salgadas;
 import util.ClassePizza;
 import util.TipoDePizza;
 
-import java.util.Arrays;
-import java.util.List;
+public class Pizzas extends CardapioItem {
+    private TipoDePizza tipoDePizza;
+    private ClassePizza classePizza;
+    private String[] ingredientes;
 
-public abstract class Pizzas {
-
-    private static final long serialVersionUID = 1L;
-    private int id = 0;
-    private static int nextId = 1;
-    private String nome;
-    private double valor;
-    protected TipoDePizza tipoDePizza;
-    protected ClassePizza classePizza;
-    protected String[] ingredientes;
-
-    public Pizzas(String nome){
-        this.id = nextId++;
-        this.nome = nome;
-        this.valor = 36.00;
+    public Pizzas(int id, String nome, TipoDePizza tipoDePizza, ClassePizza classePizza, String[] ingredientes) {
+        super(id, nome, 36);
+        this.tipoDePizza = tipoDePizza;
+        this.classePizza = classePizza;
+        this.ingredientes = ingredientes;
     }
 
-    public String toString() {
-        return "Pizzas{" +
-                "id=" + id +
-                ", nome='" + nome + '\'' +
-                ", valor=" + getValor() +
-                ", ingredientes=" + Arrays.toString(ingredientes) +
-                '}';
+    public TipoDePizza getTipoDePizza() {
+        return tipoDePizza;
     }
 
-    public String getNome() {
-        return nome;
+    public void setTipoDePizza(TipoDePizza tipoDePizza) {
+        this.tipoDePizza = tipoDePizza;
     }
 
-    public double getValor() {
-        return valor + classePizza.getValorPadrao();
+    public ClassePizza getClassePizza() {
+        return classePizza;
+    }
+
+    public void setClassePizza(ClassePizza classePizza) {
+        this.classePizza = classePizza;
     }
 
     public String[] getIngredientes() {
         return ingredientes;
     }
 
-    public static Object[][] getPizzasSalgadas() {
-        List<Pizzas> cardapio = Pizzas_Salgadas.PizzasFactory.criarCardapio();
-        int numPizzas = cardapio.size();
-        Object[][] data = new Object[numPizzas][4];
-
-        for (int i = 0; i < numPizzas; i++) {
-            Pizzas pizza = cardapio.get(i);
-            data[i][0] = pizza.getNome();
-            data[i][1] = String.join(", ", pizza.getIngredientes());
-            data[i][2] = pizza.getValor();
-            data[i][3] = 0;
-        }
-
-        return data;
+    public void setIngredientes(String[] ingredientes) {
+        this.ingredientes = ingredientes;
     }
 }
 

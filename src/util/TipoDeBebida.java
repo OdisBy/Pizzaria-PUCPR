@@ -5,6 +5,8 @@ public enum TipoDeBebida {
     Garrafa_1L,
     Copo_De_Suco,
     Jarra_De_Suco,
+    Garrafa_2L,
+    Garrafa_500_ml
 
 }
 

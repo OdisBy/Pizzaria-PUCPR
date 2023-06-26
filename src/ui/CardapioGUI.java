@@ -1,21 +1,20 @@
 package ui;
 
+import Interface.Bebidas;
 import Interface.Pizzas;
-import model.Pizzas_Salgadas;
+import data.DataBebidas;
+import data.DataPizzas;
+
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Objects;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-import javax.imageio.ImageIO;
-import javax.swing.border.Border;
 import javax.swing.border.EmptyBorder;
+import javax.swing.event.ListSelectionEvent;
+import javax.swing.event.ListSelectionListener;
 import javax.swing.table.AbstractTableModel;
-import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.TableColumn;
 
 public class CardapioGUI extends JFrame {
@@ -31,7 +30,7 @@ public class CardapioGUI extends JFrame {
 
     private void setupGUI() {
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        setSize(1024, 576);
+        setSize(1280, 720);
         setLocationRelativeTo(null);
 
         JPanel contentPane = new JPanel(new BorderLayout());
@@ -89,32 +88,84 @@ public class CardapioGUI extends JFrame {
         menuLabel.setFont(new Font("Arial", Font.BOLD, 24));
         menuPanel.add(menuLabel, BorderLayout.NORTH);
 
-        // dados
-        Object[][] data = Pizzas.getPizzasSalgadas();
+
+        // TABELA DE PIZZAS ------------------
+        Object[][] pizzasData = DataPizzas.cardapioParaTable();
+        String[] pizzaColumnNames = {"Sabor", "Ingredientes", "Valor", "Quantidade"};
+        MenuTableModel pizzasModel = new MenuTableModel(pizzasData, pizzaColumnNames);
+        JTable pizzasTable = new JTable(pizzasModel);
 
 
-        MenuTableModel model = new MenuTableModel(data);
-        JTable menuTable = new JTable(model);
-
-        TableColumn columnName = menuTable.getColumnModel().getColumn(0);
+        TableColumn columnName = pizzasTable.getColumnModel().getColumn(0);
         columnName.setPreferredWidth(100);
 
-        TableColumn columnIngredientes = menuTable.getColumnModel().getColumn(1);
+        TableColumn columnIngredientes = pizzasTable.getColumnModel().getColumn(1);
         columnIngredientes.setPreferredWidth(450);
 
-        TableColumn columnValor = menuTable.getColumnModel().getColumn(2);
+
+        TableColumn columnValor = pizzasTable.getColumnModel().getColumn(2);
         columnValor.setPreferredWidth(5);
 
-        TableColumn columnQuantity = menuTable.getColumnModel().getColumn(3);
+        TableColumn columnQuantity = pizzasTable.getColumnModel().getColumn(3);
         columnQuantity.setPreferredWidth(5);
 
-//        menuTable.getColumnModel().getColumn(1).setCellRenderer(new WrapTextCellRenderer());
-        menuTable.setRowHeight(menuTable.getRowHeight() * 4);
+        pizzasTable.setRowHeight(pizzasTable.getRowHeight() * 4);
 
-        JScrollPane scrollPane = new JScrollPane(menuTable);
-        scrollPane.setBorder(new EmptyBorder(30, 10, 30, 10));
 
-        menuPanel.add(scrollPane, BorderLayout.CENTER);
+        // TABELA DE BEBIDAS ------------------
+        Object[][] bebidasData = DataBebidas.cardapioParaTable();
+        String[] bebidasColumnNames = {"Nome", "Valor", "Quantidade"};
+
+
+        MenuTableModel bebidasModel = new MenuTableModel(bebidasData, bebidasColumnNames);
+        JTable bebidasTable = new JTable(bebidasModel);
+
+        bebidasTable.setRowHeight(bebidasTable.getRowHeight() * 4);
+
+
+        JScrollPane bebidasScrollPane = new JScrollPane(bebidasTable);
+        JScrollPane pizzasScrollPane = new JScrollPane(pizzasTable);
+
+
+        bebidasScrollPane.setBorder(new EmptyBorder(30, 10, 30, 10));
+        pizzasScrollPane.setBorder(new EmptyBorder(30, 10, 30, 10));
+
+
+        JPanel tablesPanel = new JPanel(new BorderLayout());
+        tablesPanel.setBorder(new EmptyBorder(20, 0, 20, 0));
+        tablesPanel.add(pizzasScrollPane, BorderLayout.CENTER);
+        tablesPanel.add(bebidasScrollPane, BorderLayout.SOUTH);
+
+        JScrollPane tablesScrollPane = new JScrollPane(tablesPanel);
+
+        menuPanel.add(tablesScrollPane, BorderLayout.CENTER);
+
+
+        pizzasTable.getSelectionModel().addListSelectionListener(new ListSelectionListener() {
+            @Override
+            public void valueChanged(ListSelectionEvent e) {
+                if (!e.getValueIsAdjusting()) {
+                    int selectedRow = pizzasTable.getSelectedRow();
+                    if (selectedRow != -1) {
+                        bebidasTable.clearSelection(); // Desmarcar seleção na tabela de bebidas
+                    }
+                }
+            }
+        });
+
+        bebidasTable.getSelectionModel().addListSelectionListener(new ListSelectionListener() {
+            @Override
+            public void valueChanged(ListSelectionEvent e) {
+                if (!e.getValueIsAdjusting()) {
+                    int selectedRow = bebidasTable.getSelectedRow();
+                    if (selectedRow != -1) {
+                        pizzasTable.clearSelection(); // Desmarcar seleção na tabela de pizzas
+                    }
+                }
+            }
+        });
+
+
 
         JPanel controlPanel = new JPanel(new FlowLayout());
 
@@ -122,10 +173,16 @@ public class CardapioGUI extends JFrame {
         addButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                int selectedRow = menuTable.getSelectedRow();
-                if (selectedRow != -1) {
-                    model.incrementQuantity(selectedRow);
-                    menuTable.repaint();
+                int selectedRowPizza = pizzasTable.getSelectedRow();
+                if (selectedRowPizza != -1) {
+                    pizzasModel.incrementQuantityPizza(selectedRowPizza);
+                    pizzasTable.repaint();
+                }
+
+                int selectedRowDrink = bebidasTable.getSelectedRow();
+                if (selectedRowDrink != -1) {
+                    bebidasModel.incrementQuantityDrink(selectedRowDrink);
+                    bebidasTable.repaint();
                 }
             }
         });
@@ -138,10 +195,15 @@ public class CardapioGUI extends JFrame {
         removeButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                int selectedRow = menuTable.getSelectedRow();
-                if (selectedRow != -1) {
-                    model.decrementQuantity(selectedRow);
-                    menuTable.repaint();
+                int selectedRowPizza = pizzasTable.getSelectedRow();
+                if (selectedRowPizza != -1) {
+                    pizzasModel.decrementQuantityPizza(selectedRowPizza);
+                    pizzasTable.repaint();
+                }
+                int selectedRowDrink = bebidasTable.getSelectedRow();
+                if (selectedRowDrink != -1) {
+                    bebidasModel.decrementQuantityDrink(selectedRowDrink);
+                    bebidasTable.repaint();
                 }
             }
         });
@@ -151,7 +213,7 @@ public class CardapioGUI extends JFrame {
         finalizarButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                finalizarPedido(model);
+                finalizarPedido(pizzasModel, bebidasModel);
 //                JOptionPane.showMessageDialog(CardapioGUI.this, "Clicou no botão Finalizar Pedido");
             }
         });
@@ -160,15 +222,22 @@ public class CardapioGUI extends JFrame {
         menuPanel.add(controlPanel, BorderLayout.SOUTH);
     }
 
-    private void finalizarPedido(MenuTableModel model) {
+    private void finalizarPedido(MenuTableModel pizzaModel, MenuTableModel bebidaModel) {
         carrinho.clear();
 
-        // Iterar sobre os dados do modelo
-        for (int row = 0; row < model.getRowCount(); row++) {
-            int quantidade = (int) model.getValueAt(row, 3); // Obtém a quantidade da coluna "Quantidade"
+        for (int row = 0; row < pizzaModel.getRowCount(); row++) {
+            int quantidade = (int) pizzaModel.getValueAt(row, 3);
             if (quantidade > 0) {
-                String pizza = (String) model.getValueAt(row, 0); // Obtém o nome da pizza da coluna "Pizza"
-                carrinho.add(pizza); // Adiciona a pizza ao array de pizzas selecionadas
+                String pizza = (String) pizzaModel.getValueAt(row, 0);
+                carrinho.add(pizza);
+            }
+        }
+
+        for (int row = 0; row < bebidaModel.getRowCount(); row++) {
+            int quantidade = (int) bebidaModel.getValueAt(row, 2);
+            if (quantidade > 0) {
+                String bebida = (String) bebidaModel.getValueAt(row, 0);
+                carrinho.add(bebida);
             }
         }
 
@@ -262,14 +331,14 @@ public class CardapioGUI extends JFrame {
         });
     }
 
-    private class MenuTableModel extends AbstractTableModel {
+    public class MenuTableModel extends AbstractTableModel {
 
-        private String[] columnNames = {"Sabor", "Ingredientes", "Valor", "Quantidade"};
-
+        private String[] columnNames;
         private Object[][] data;
 
-        public MenuTableModel(Object[][] data){
+        public MenuTableModel(Object[][] data, String[] columnNames) {
             this.data = data;
+            this.columnNames = columnNames;
         }
 
         @Override
@@ -297,33 +366,28 @@ public class CardapioGUI extends JFrame {
             return false;
         }
 
-        public void incrementQuantity(int row) {
-            int quantity = (int) data[row][3];
-            data[row][3] = quantity + 1;
+        public void incrementQuantityPizza(int row) {
+            int quantity = (int) data[row][4];
+            data[row][4] = quantity + 1;
         }
 
-        public void decrementQuantity(int row) {
-            int quantity = (int) data[row][3];
+        public void incrementQuantityDrink(int row) {
+            int quantity = (int) data[row][2];
+            data[row][2] = quantity + 1;
+        }
+
+        public void decrementQuantityPizza(int row) {
+            int quantity = (int) data[row][4];
             if (quantity > 0) {
-                data[row][3] = quantity - 1;
+                data[row][4] = quantity - 1;
+            }
+        }
+
+        public void decrementQuantityDrink(int row) {
+            int quantity = (int) data[row][2];
+            if (quantity > 0) {
+                data[row][2] = quantity - 1;
             }
         }
     }
-
-//    public class WrapTextCellRenderer extends DefaultTableCellRenderer {
-//        private JTextArea textArea;
-//
-//        public WrapTextCellRenderer() {
-//            textArea = new JTextArea();
-//            textArea.setLineWrap(true);
-//            textArea.setWrapStyleWord(true);
-//            textArea.setBorder(new EmptyBorder(5, 5, 5, 5));
-//        }
-//
-//        @Override
-//        public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus, int row, int column) {
-//            textArea.setText((String) value);
-//            return textArea;
-//        }
-//    }
 }

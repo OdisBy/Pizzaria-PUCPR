@@ -1,13 +1,4 @@
-import Interface.Pedido;
-import Interface.Pizzas;
-import model.Pizzas_Salgadas;
-import ui.CardapioGUI;
-import ui.Home;
 import ui.Pedidos;
-import util.ClassePizza;
-import util.TamanhoPizza;
-
-import java.util.List;
 
 public class App {
     public static void main(String[] args) {

@@ -1,40 +1,21 @@
 package Interface;
 
-import util.ClassePizza;
 import util.TipoDeBebida;
-import util.TipoDePizza;
-import java.util.Arrays;
 
-public abstract class Bebidas {
+public class Bebidas extends CardapioItem {
+    private TipoDeBebida tipoDeBebida;
 
-    private static final long serialVersionUID = 1L;
-    private int id = 0;
-    private static int nextId = 1;
-    private String nome;
-    private double valor;
-    protected TipoDeBebida tipoDeBebida;
-
-    public Bebidas(String nome, double valorPadrao){
-        this.id = nextId++;
-        this.nome = nome;
-        this.valor = valorPadrao;
+    public Bebidas(int id, String nome, double valor, TipoDeBebida tipoDeBebida) {
+        super(id, nome, valor);
+        this.tipoDeBebida = tipoDeBebida;
     }
 
-    public String toString() {
-        return "Pizzas{" +
-                "id=" + id +
-                ", nome='" + nome + '\'' +
-                ", valor=" + getValor() +
-                '}';
+    public TipoDeBebida getTipoDeBebida() {
+        return tipoDeBebida;
     }
 
-    public String getNome() {
-        return nome;
+    public void setTipoDeBebida(TipoDeBebida tipoDeBebida) {
+        this.tipoDeBebida = tipoDeBebida;
     }
-
-    public double getValor() {
-        return valor;
-    }
-
 }
 
