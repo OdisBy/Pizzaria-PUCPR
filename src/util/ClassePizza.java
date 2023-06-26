@@ -7,9 +7,13 @@ public enum ClassePizza {
     Premium(45.00);
 
     private double valorPadrao;
-
+    private static final long serialVersionUID = 1L;
     ClassePizza(double valorPadrao) {
         this.valorPadrao = valorPadrao;
+    }
+
+    public double getValor() {
+        return valorPadrao;
     }
 
     public double getValorPadrao() {

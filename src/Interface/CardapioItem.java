@@ -1,6 +1,9 @@
 package Interface;
 
-public abstract class CardapioItem {
+import java.io.Serializable;
+
+public abstract class CardapioItem implements Serializable {
+    private static final long serialVersionUID = 1L;
     private int id;
     private String nome;
     private double valor;

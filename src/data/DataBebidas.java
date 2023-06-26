@@ -7,7 +7,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class DataBebidas {
-    private static Object[][] criarCardapio() {
+    public static Object[][] criarCardapio() {
         Object[][] cardapio = new Object[][]{
                 {1, "Água 500ml", 2.99, TipoDeBebida.Garrafa_500_ml},
                 {2, "Chá Mate Gelado 1L", 6.99, TipoDeBebida.Garrafa_1L},

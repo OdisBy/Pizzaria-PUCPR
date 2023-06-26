@@ -4,6 +4,7 @@ import util.ClassePizza;
 import util.TipoDePizza;
 
 public class Pizzas extends CardapioItem {
+    private static final long serialVersionUID = 1L;
     private TipoDePizza tipoDePizza;
     private ClassePizza classePizza;
     private String[] ingredientes;

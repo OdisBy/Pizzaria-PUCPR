@@ -3,6 +3,7 @@ package Interface;
 import util.TipoDeBebida;
 
 public class Bebidas extends CardapioItem {
+    private static final long serialVersionUID = 1L;
     private TipoDeBebida tipoDeBebida;
 
     public Bebidas(int id, String nome, double valor, TipoDeBebida tipoDeBebida) {

@@ -5,5 +5,7 @@ public enum TamanhoPizza {
     Pequena,
     Media,
     Grande,
-    Big
+    Gigante;
+
+    private static final long serialVersionUID = 1L;
 }

@@ -9,7 +9,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class DataPizzas {
-    private static Object[][] criarCardapio() {
+    public static Object[][] criarCardapio() {
         Object[][] cardapio = new Object[][]{
 
                 {1, "Strogonoff de frango", TipoDePizza.Salgada, ClassePizza.Tradicional, new String[]{"Frango desfiado", "Catupiry", "Molho", "Batata palha", "Orégano"}},

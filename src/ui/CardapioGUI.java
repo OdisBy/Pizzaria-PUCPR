@@ -1,9 +1,11 @@
 package ui;
 
-import Interface.Bebidas;
+import Interface.ItemCarrinho;
+import Interface.Pedido;
 import Interface.Pizzas;
 import data.DataBebidas;
 import data.DataPizzas;
+import util.TamanhoPizza;
 
 import javax.swing.*;
 import java.awt.*;
@@ -18,12 +20,18 @@ import javax.swing.table.AbstractTableModel;
 import javax.swing.table.TableColumn;
 
 public class CardapioGUI extends JFrame {
+    private HomeGUI homeUi = new HomeGUI();
+    private Pedido pedidoAtual;
+
 
     public CardapioGUI() {
+        super("Pizzaria da PUCPR");
         initComponents();
         setupGUI();
+        this.pedidoAtual = null;
     }
-    private ArrayList<String> carrinho = new ArrayList<>();
+    private ArrayList<ItemCarrinho> carrinho = new ArrayList<>();
+    private ArrayList<String> carrinhoString = new ArrayList<>();
     private JTextArea pedidosTextArea;
 
     private Pizzas pizzas;
@@ -50,7 +58,9 @@ public class CardapioGUI extends JFrame {
         homeButton.setText("");
         homeButton.setIcon(homeIcon);
         homeButton.addActionListener(e -> {
-            JOptionPane.showMessageDialog(this, "Clicou no botão Home");
+//            JOptionPane.showMessageDialog(this, "Clicou no botão Home");
+            this.setVisible(false);
+            homeUi.setVisible(true);
         });
         navigationPanel.add(homeButton);
 
@@ -77,7 +87,9 @@ public class CardapioGUI extends JFrame {
         pedidosButton.setText("");
         pedidosButton.setIcon(pedidosIcon);
         pedidosButton.addActionListener(e -> {
-            JOptionPane.showMessageDialog(this, "Clicou no botão Pedidos");
+//            JOptionPane.showMessageDialog(this, "Clicou no botão Pedidos");
+            Pedido pedido = Pedido.loadData(2);
+
         });
         navigationPanel.add(pedidosButton);
 
@@ -91,7 +103,7 @@ public class CardapioGUI extends JFrame {
 
         // TABELA DE PIZZAS ------------------
         Object[][] pizzasData = DataPizzas.cardapioParaTable();
-        String[] pizzaColumnNames = {"Sabor", "Ingredientes", "Valor", "Quantidade"};
+        String[] pizzaColumnNames = {"Sabor", "Ingredientes", "Valor (Média)", "Quantidade"};
         MenuTableModel pizzasModel = new MenuTableModel(pizzasData, pizzaColumnNames);
         JTable pizzasTable = new JTable(pizzasModel);
 
@@ -229,7 +241,9 @@ public class CardapioGUI extends JFrame {
             int quantidade = (int) pizzaModel.getValueAt(row, 3);
             if (quantidade > 0) {
                 String pizza = (String) pizzaModel.getValueAt(row, 0);
-                carrinho.add(pizza);
+                TamanhoPizza tamanho = pedirTamanho(pizza);
+                ItemCarrinho item = new ItemCarrinho(pizza, tamanho);
+                carrinho.add(item);
             }
         }
 
@@ -237,7 +251,8 @@ public class CardapioGUI extends JFrame {
             int quantidade = (int) bebidaModel.getValueAt(row, 2);
             if (quantidade > 0) {
                 String bebida = (String) bebidaModel.getValueAt(row, 0);
-                carrinho.add(bebida);
+                ItemCarrinho item = new ItemCarrinho(bebida);
+                carrinho.add(item);
             }
         }
 
@@ -278,21 +293,49 @@ public class CardapioGUI extends JFrame {
 
         pedidosFrame.add(botoesPanel, BorderLayout.SOUTH);
         StringBuilder pedidosText = new StringBuilder();
-        for (String pizza : carrinho) {
-            pedidosText.append("- ").append(pizza).append("\n");
+        for (ItemCarrinho item : carrinho) {
+            if (item.getTamanho() != null) { // Verifica se é uma pizza
+                pedidosText.append("- ").append(item.getNome()).append(" (Tamanho: ").append(item.getTamanho()).append(")");
+            } else {
+                pedidosText.append("- ").append(item.getNome());
+            }
+            pedidosText.append("\n");
         }
         pedidosTextArea.setText(pedidosText.toString());
 
         pedidosFrame.setVisible(true);
     }
 
-    private void RedirectPedidos() {
-        JFrame acompanharFrame = new JFrame("Acompanhar");
-        acompanharFrame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-        acompanharFrame.setSize(400, 300);
-        acompanharFrame.setLocationRelativeTo(this);
 
-        acompanharFrame.setVisible(true);
+    private TamanhoPizza pedirTamanho(String pizza) {
+        TamanhoPizza[] tamanhos = TamanhoPizza.values();
+
+        TamanhoPizza tamanhoSelecionado = (TamanhoPizza) JOptionPane.showInputDialog(
+                this,
+                "Selecione o tamanho da pizza de " + pizza + ":",
+                "Escolha o tamanho",
+                JOptionPane.PLAIN_MESSAGE,
+                null,
+                tamanhos,
+                tamanhos[0]);
+
+        return tamanhoSelecionado;
+    }
+
+    private void RedirectPedidos() {
+//        JFrame acompanharFrame = new JFrame("Acompanhar");
+//        acompanharFrame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+//        acompanharFrame.setSize(400, 300);
+//        acompanharFrame.setLocationRelativeTo(this);
+//
+//        acompanharFrame.setVisible(true);
+
+        pedidoAtual = new Pedido(carrinho);
+        ArrayList<ItemCarrinho> pedidos = pedidoAtual.getItens();
+        System.out.println(pedidoAtual.getValorTotal());
+        System.out.println(pedidoAtual.getDataCriacao());;
+        pedidoAtual.saveData();
+        carrinho.clear();
     }
 
     @SuppressWarnings("unchecked")
@@ -367,8 +410,8 @@ public class CardapioGUI extends JFrame {
         }
 
         public void incrementQuantityPizza(int row) {
-            int quantity = (int) data[row][4];
-            data[row][4] = quantity + 1;
+            int quantity = (int) data[row][3];
+            data[row][3] = quantity + 1;
         }
 
         public void incrementQuantityDrink(int row) {
@@ -377,9 +420,9 @@ public class CardapioGUI extends JFrame {
         }
 
         public void decrementQuantityPizza(int row) {
-            int quantity = (int) data[row][4];
+            int quantity = (int) data[row][3];
             if (quantity > 0) {
-                data[row][4] = quantity - 1;
+                data[row][3] = quantity - 1;
             }
         }
 
