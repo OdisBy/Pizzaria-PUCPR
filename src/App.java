@@ -1,22 +1,23 @@
-import ui.PedidosGUI;
+import ui.CardapioGUI;
+import ui.HomeGUI;
+
+import javax.swing.*;
 
 public class App {
     public static void main(String[] args) {
-//        List<Pizzas> cardapio = Pizzas_Salgadas.PizzasFactory.criarCardapio();
-//        for (Pizzas pizza : cardapio) {
-//            System.out.println(pizza);
-//        }
-//
-//        Pedido pedido = new Pedido(new Pizzas_Salgadas.Quatro_Queijos(), TamanhoPizza.Big);
-//
-//        System.out.println(pedido.getValor());
-//
-//        Home homeUi = new Home();
-//        homeUi.homeUiSetup();
-//        CardapioGUI cardapioGUI = new CardapioGUI();
-//        cardapioGUI.setVisible(true);
+        try {
+            for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
+                if ("Nimbus".equals(info.getName())) {
+                    javax.swing.UIManager.setLookAndFeel(info.getClassName());
+                    break;
+                }
+            }
+        } catch (ClassNotFoundException | InstantiationException | IllegalAccessException |
+                 UnsupportedLookAndFeelException ex) {
+            java.util.logging.Logger.getLogger(CardapioGUI.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+        }
 
-        PedidosGUI pedidos = new PedidosGUI();
-        pedidos.setVisible(true);
+        java.awt.EventQueue.invokeLater(() -> new HomeGUI().setVisible(true));
+
     }
 }

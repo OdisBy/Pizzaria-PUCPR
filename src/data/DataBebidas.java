@@ -1,10 +1,6 @@
 package data;
 
-import Interface.Bebidas;
 import util.TipoDeBebida;
-
-import java.util.ArrayList;
-import java.util.List;
 
 public class DataBebidas {
     public static Object[][] criarCardapio() {
