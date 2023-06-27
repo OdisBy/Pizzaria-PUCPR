@@ -285,6 +285,7 @@ public class CardapioGUI extends JFrame {
             @Override
             public void actionPerformed(ActionEvent e) {
                 RedirectPedidos();
+                pedidosFrame.setVisible(false);
             }
         });
         botoesPanel.add(pagarButton);
@@ -322,9 +323,6 @@ public class CardapioGUI extends JFrame {
 
     private void RedirectPedidos() {
         pedidoAtual = new Pedido(carrinho);
-        ArrayList<ItemCarrinho> pedidos = pedidoAtual.getItens();
-        System.out.println(pedidoAtual.getValorTotal());
-        System.out.println(pedidoAtual.getDataCriacao());;
         pedidoAtual.saveData();
         carrinho.clear();
     }

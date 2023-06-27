@@ -1,16 +1,12 @@
 package data;
 
-import Interface.Pizzas;
 import util.ClassePizza;
-import util.TamanhoPizza;
 import util.TipoDePizza;
-
-import java.util.ArrayList;
-import java.util.List;
 
 public class DataPizzas {
     public static Object[][] criarCardapio() {
-        Object[][] cardapio = new Object[][]{
+
+        return new Object[][]{
 
                 {1, "Strogonoff de frango", TipoDePizza.Salgada, ClassePizza.Tradicional, new String[]{"Frango desfiado", "Catupiry", "Molho", "Batata palha", "Orégano"}},
                 {2, "Strogonoff de carne", TipoDePizza.Salgada, ClassePizza.Tradicional, new String[]{"Carne", "Molho", "Batata palha", "Orégano"}},
@@ -35,8 +31,6 @@ public class DataPizzas {
                 {20, "Chocolate Com Morango", TipoDePizza.Doce, ClassePizza.Tradicional, new String[]{"Chocolate Preto", "Morango", "Chocolate Granulado"}},
                 {21, "MMs", TipoDePizza.Doce, ClassePizza.Tradicional, new String[]{"Chocolate Preto", "Confetes de MMs"}}
         };
-
-        return cardapio;
     }
 
     public static Object[][] cardapioParaTable() {

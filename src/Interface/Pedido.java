@@ -1,14 +1,14 @@
 package Interface;
 
 import util.PedidosStatus;
-import util.TamanhoPizza;
-import util.ClassePizza;
 
 import java.io.*;
-import java.time.LocalDate;
+import java.text.DecimalFormat;
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 
 public class Pedido implements Serializable {
     private static final long serialVersionUID = 1L;
@@ -23,24 +23,66 @@ public class Pedido implements Serializable {
         this.itens = new ArrayList<>(itens);
         this.valorTotal = calcularValorTotal();
         this.createdAt = LocalDateTime.now();
+        this.pedidosStatus = PedidosStatus.PREPARANDO;
     }
     public Pedido() {
+    }
+
+    public static Pedido loadPedidoById(int id) {
+        String saveFolder = "saves";
+        String fileName = saveFolder + "/" + "pedido_" + id + ".dat";
+
+        Pedido pedido = null;
+        try (FileInputStream fileInputStream = new FileInputStream(fileName);
+             ObjectInputStream objectInputStream = new ObjectInputStream(fileInputStream)) {
+            pedido = (Pedido) objectInputStream.readObject();
+        } catch (FileNotFoundException e) {
+            System.out.println("Arquivo não encontrado: " + e.getMessage());
+        } catch (IOException e) {
+            System.out.println("Erro ao ler os dados do pedido do arquivo: " + e.getMessage());
+        } catch (ClassNotFoundException e) {
+            System.out.println("Classe não encontrada ao carregar os dados do pedido: " + e.getMessage());
+        }
+
+        return pedido;
     }
 
     public int getId() {
         return id;
     }
 
-    public ArrayList<ItemCarrinho> getItens() {
-        return new ArrayList<>(itens);
+    public String getItensAsString() {
+        StringBuilder sb = new StringBuilder();
+        for (ItemCarrinho item : itens) {
+            sb.append(item.getNome());
+            sb.append(", ");
+        }
+        if (sb.length() > 2) {
+            sb.setLength(sb.length() - 2);
+        }
+
+        System.out.println(sb);
+        return sb.toString();
     }
 
     public double getValorTotal() {
         return valorTotal;
     }
 
+    public void setPedidoStatus(PedidosStatus status) {
+        this.pedidosStatus = status;
+        replaceData(this.id);
+    }
+
     public LocalDateTime getDataCriacao() {
         return createdAt;
+    }
+
+    public String getDataCriacaoString() {
+        LocalDateTime localDateTime = getDataCriacao();
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm:ss", new Locale("pt", "BR"));
+        String formattedDateTime = localDateTime.format(formatter);
+        return formattedDateTime;
     }
 
     private double calcularValorTotal() {
@@ -49,6 +91,13 @@ public class Pedido implements Serializable {
             total += item.getValor();
         }
         return total;
+    }
+
+    private String calcularValorTotalAsString() {
+        Double valor = calcularValorTotal();
+        DecimalFormat decimalFormat = new DecimalFormat("#0.00");
+        String valorString = decimalFormat.format(valor);
+        return valorString;
     }
 
     public void saveData() {
@@ -79,6 +128,31 @@ public class Pedido implements Serializable {
         }
     }
 
+    private void replaceData(int id) {
+        String saveFolder = "saves";
+        String fileName = saveFolder + "/" + "pedido_" + id + ".dat";
+
+        try{
+            File file = new File(fileName);
+            if (file.exists()) {
+                file.delete();
+            }
+
+            try (FileOutputStream fileOut = new FileOutputStream(file);
+                 ObjectOutputStream objectOut = new ObjectOutputStream(fileOut)) {
+                objectOut.writeObject(this);
+                System.out.println("Pedido salvo com sucesso!");
+            } catch (IOException e) {
+                System.out.println("Erro ao salvar o pedido: " + e.getMessage());
+            }
+        } catch (Exception e) {
+            System.out.println("Erro ao substituir data " + e.getMessage());
+        }
+
+
+
+    }
+
     private int getNextFileId() {
         File folder = new File("saves");
         File[] files = folder.listFiles();
@@ -98,53 +172,62 @@ public class Pedido implements Serializable {
 
         return maxId + 1;
     }
-        public static Object[][] loadAllData() {
-            String saveFolder = "saves";
-            List<Object[]> data = new ArrayList<>();
+    public static Object[][] loadAllData() {
+        String saveFolder = "saves";
+        List<Object[]> data = new ArrayList<>();
 
-            File folder = new File(saveFolder);
-            File[] files = folder.listFiles();
-            if (files != null) {
-                for (File file : files) {
-                    if (file.isFile() && file.getName().startsWith("pedido_") && file.getName().endsWith(".dat")) {
-                        Pedido pedido = null;
+        File folder = new File(saveFolder);
+        File[] files = folder.listFiles();
+        if (files != null) {
+            for (File file : files) {
+                if (file.isFile() && file.getName().startsWith("pedido_") && file.getName().endsWith(".dat")) {
+                    Pedido pedido;
 
-                        try (FileInputStream fileInputStream = new FileInputStream(file);
-                             ObjectInputStream objectInputStream = new ObjectInputStream(fileInputStream)) {
-                            pedido = (Pedido) objectInputStream.readObject();
-                            Object[] row = {
-                                    pedido.getId(),
-                                    pedido.getItens(),
-                                    pedido.getValorTotal(),
-                                    pedido.getStatus()
-                            };
-                            data.add(row);
-                        } catch (FileNotFoundException e) {
-                            System.out.println("Arquivo não encontrado: " + e.getMessage());
-                        } catch (IOException e) {
-                            System.out.println("Erro ao ler os dados do pedido do arquivo: " + e.getMessage());
-                        } catch (ClassNotFoundException e) {
-                            System.out.println("Classe não encontrada ao carregar os dados do pedido: " + e.getMessage());
-                        }
+                    try (FileInputStream fileInputStream = new FileInputStream(file);
+                         ObjectInputStream objectInputStream = new ObjectInputStream(fileInputStream)) {
+                        pedido = (Pedido) objectInputStream.readObject();
+                        Object[] row = {
+                                pedido.getId(),
+                                pedido.getItensAsString(),
+                                pedido.calcularValorTotalAsString(),
+                                pedido.getDataCriacaoString(),
+                                pedido.getStatus()
+                        };
+                        data.add(row);
+                    } catch (FileNotFoundException e) {
+                        System.out.println("Arquivo não encontrado: " + e.getMessage());
+                    } catch (IOException e) {
+                        System.out.println("Erro ao ler os dados do pedido do arquivo: " + e.getMessage());
+                    } catch (ClassNotFoundException e) {
+                        System.out.println("Classe não encontrada ao carregar os dados do pedido: " + e.getMessage());
                     }
                 }
             }
-
-            if (data.isEmpty()) {
-                System.out.println("Nenhum pedido encontrado.");
-            } else {
-                System.out.println("Foram encontrados " + data.size() + " pedidos.");
-            }
-
-            Object[][] dataArray = new Object[data.size()][];
-            for (int i = 0; i < data.size(); i++) {
-                dataArray[i] = data.get(i);
-            }
-
-            return dataArray;
         }
+
+        if (data.isEmpty()) {
+            System.out.println("Nenhum pedido encontrado.");
+        } else {
+            System.out.println("Foram encontrados " + data.size() + " pedidos.");
+        }
+
+        Object[][] dataArray = new Object[data.size()][];
+        for (int i = data.size() - 1; i >= 0; i--) {
+            dataArray[i] = data.get(data.size() - 1 - i);
+        }
+        return dataArray;
+    }
 
     private PedidosStatus getStatus() {
         return this.pedidosStatus;
+    }
+
+    public void autoExcluir() {
+        String saveFolder = "saves";
+        String fileName = saveFolder + "/" + "pedido_" + id + ".dat";
+        File file = new File(fileName);
+        if (file.exists()) {
+            file.delete();
+        }
     }
 }

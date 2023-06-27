@@ -1,9 +1,10 @@
 package ui;
 
 import Interface.Pedido;
-import data.DataPizzas;
+import util.PedidosStatus;
 
 import javax.swing.*;
+import javax.swing.border.EmptyBorder;
 import javax.swing.table.AbstractTableModel;
 import javax.swing.table.TableColumn;
 import java.awt.*;
@@ -12,6 +13,8 @@ import java.util.Objects;
 public class PedidosGUI extends JFrame {
     private CardapioGUI cardapioGUI;
     private HomeGUI homeGUI;
+
+    private JTable pedidosTable;
 
     public PedidosGUI() {
         super("Pizzaria da PUCPR");
@@ -84,30 +87,108 @@ public class PedidosGUI extends JFrame {
         Object[][] pedidosData = Pedido.loadAllData();
         String[] pedidosColumnNames = {"ID", "Pedido", "Valor", "Criado", "Status"};
         MenuTableModel pedidosModel = new MenuTableModel(pedidosData, pedidosColumnNames);
-        JTable pedidosTable = new JTable(pedidosModel);
+        pedidosTable = new JTable(pedidosModel);
 
 
         TableColumn columnId = pedidosTable.getColumnModel().getColumn(0);
         columnId.setPreferredWidth(5);
 
-        TableColumn columnPedido = pedidosTable.getColumnModel().getColumn(1);
-        columnPedido.setPreferredWidth(450);
-
+        TableColumn columnItems = pedidosTable.getColumnModel().getColumn(1);
+        columnItems.setPreferredWidth(450);
 
         TableColumn columnValor = pedidosTable.getColumnModel().getColumn(2);
-        columnValor.setPreferredWidth(5);
+        columnValor.setPreferredWidth(3);
 
         TableColumn columnCreated = pedidosTable.getColumnModel().getColumn(3);
-        columnCreated.setPreferredWidth(10);
+        columnCreated.setPreferredWidth(30);
 
         TableColumn columnStatus = pedidosTable.getColumnModel().getColumn(4);
         columnStatus.setPreferredWidth(50);
 
         pedidosTable.setRowHeight(pedidosTable.getRowHeight() * 4);
 
-        menuPanel.add(pedidosTable);
+        JScrollPane pedidosScrollPanel = new JScrollPane(pedidosTable);
+
+        pedidosScrollPanel.setBorder(new EmptyBorder(10, 10, 10, 10));
+
+        JPanel tablesPanel = new JPanel(new BorderLayout());
+        tablesPanel.setBorder(new EmptyBorder(20, 0, 20, 0));
+        tablesPanel.add(pedidosScrollPanel, BorderLayout.CENTER);
+
+        JScrollPane tablesScrollPane = new JScrollPane(tablesPanel);
+
+        menuPanel.add(tablesScrollPane, BorderLayout.CENTER);
+
+
+        JPanel controlPanel = new JPanel(new FlowLayout());
+
+        JButton removeButton = new JButton("Excluir Item");
+        removeButton.addActionListener(e -> excluirPedido(pedidosModel));
+        controlPanel.add(removeButton);
+
+        JButton modifyButton = new JButton("Modificar item");
+        modifyButton.addActionListener(e -> modifyPedido(pedidosModel));
+        controlPanel.add(modifyButton);
+
+        JButton checkButton = new JButton("Concluído");
+        checkButton.addActionListener(e -> checkPedido(pedidosModel));
+        controlPanel.add(checkButton);
+
+        menuPanel.add(controlPanel, BorderLayout.SOUTH);
     }
-    @SuppressWarnings("unchecked")
+
+    private void excluirPedido(MenuTableModel pedidosModel) {
+        int selectedRowPedido = pedidosTable.getSelectedRow();
+        if (selectedRowPedido >= 0) {
+            Pedido pedido = Pedido.loadPedidoById((int) pedidosModel.getValueAt(selectedRowPedido, 0));
+            if (pedido != null) {
+                pedido.autoExcluir();
+                updatePedidos();
+            }
+        }
+    }
+
+
+    private void checkPedido(MenuTableModel pedidosModel) {
+        int selectedRowPedido = pedidosTable.getSelectedRow();
+        if (selectedRowPedido >= 0) {
+            Pedido pedido = Pedido.loadPedidoById((int) pedidosModel.getValueAt(selectedRowPedido, 0));
+            if (pedido != null) {
+                pedido.setPedidoStatus(PedidosStatus.FINALIZADO);
+                updatePedidos();
+            }
+        }
+    }
+
+    private void modifyPedido(MenuTableModel pedidosModel) {
+        int selectedRow = pedidosTable.getSelectedRow();
+        if (selectedRow >= 0) {
+            int pedidoId = (int) pedidosModel.getValueAt(selectedRow, 0);
+            PedidosStatus[] pedidosStatusModel = PedidosStatus.values();
+            PedidosStatus jaSelecionado = (PedidosStatus) pedidosModel.getValueAt(selectedRow, 4);
+
+            PedidosStatus pedidosStatus = (PedidosStatus) JOptionPane.showInputDialog(
+                    this,
+                    "Selecione o status do pedido ID: " + pedidoId,
+                    "Escolha o status",
+                    JOptionPane.PLAIN_MESSAGE,
+                    null,
+                    pedidosStatusModel,
+                    jaSelecionado);
+
+
+            Pedido pedido = Pedido.loadPedidoById(pedidoId);
+            pedido.setPedidoStatus(pedidosStatus);
+            updatePedidos();
+        }
+    }
+
+    private void updatePedidos() {
+        PedidosGUI pedidosGUI = new PedidosGUI();
+        this.setVisible(false);
+        pedidosGUI.setVisible(true);
+    }
+
     private void initComponents() {
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
@@ -137,17 +218,13 @@ public class PedidosGUI extends JFrame {
             java.util.logging.Logger.getLogger(PedidosGUI.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         }
 
-        java.awt.EventQueue.invokeLater(new Runnable() {
-            public void run() {
-                new HomeGUI().setVisible(true);
-            }
-        });
+        java.awt.EventQueue.invokeLater(() -> new HomeGUI().setVisible(true));
     }
 
-    public class MenuTableModel extends AbstractTableModel {
+    public static class MenuTableModel extends AbstractTableModel {
 
-        private String[] columnNames;
-        private Object[][] data;
+        private final String[] columnNames;
+        private final Object[][] data;
 
         public MenuTableModel(Object[][] data, String[] columnNames) {
             this.data = data;

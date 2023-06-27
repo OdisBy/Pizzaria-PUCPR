@@ -1,16 +1,7 @@
 package ui;
 
-import data.DataBebidas;
-import data.DataPizzas;
-
 import javax.swing.*;
-import javax.swing.border.EmptyBorder;
-import javax.swing.event.ListSelectionEvent;
-import javax.swing.event.ListSelectionListener;
-import javax.swing.table.TableColumn;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.util.Objects;
 
 public class HomeGUI extends JFrame {
@@ -80,7 +71,7 @@ public class HomeGUI extends JFrame {
         JPanel menuPanel = new JPanel(new GridBagLayout());
         contentPane.add(menuPanel, BorderLayout.CENTER);
 
-        JLabel titleLabel = new JLabel("<html>Pizzaria da PUCPR<br>A pizza que te fará passar de ano</html>", SwingConstants.CENTER);
+        JLabel titleLabel = new JLabel("<html>Pizzaria da PUCPR<br>A pizza que te fara passar de ano</html>", SwingConstants.CENTER);
         titleLabel.setFont(new Font("Arial", Font.BOLD, 24));
         GridBagConstraints gbc = new GridBagConstraints();
         gbc.gridx = 0;
@@ -88,10 +79,9 @@ public class HomeGUI extends JFrame {
         gbc.weightx = 1.0;
         gbc.weighty = 1.0;
         gbc.fill = GridBagConstraints.BOTH;
-        gbc.anchor = GridBagConstraints.CENTER; // Centralizar verticalmente
+        gbc.anchor = GridBagConstraints.CENTER;
         menuPanel.add(titleLabel, gbc);
     }
-    @SuppressWarnings("unchecked")
     private void initComponents() {
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
@@ -121,10 +111,6 @@ public class HomeGUI extends JFrame {
             java.util.logging.Logger.getLogger(CardapioGUI.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         }
 
-        java.awt.EventQueue.invokeLater(new Runnable() {
-            public void run() {
-                new HomeGUI().setVisible(true);
-            }
-        });
+        java.awt.EventQueue.invokeLater(() -> new HomeGUI().setVisible(true));
     }
 }
