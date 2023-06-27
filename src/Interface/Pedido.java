@@ -59,7 +59,6 @@ public class Pedido implements Serializable {
             } else {
                 sb.append(item.getNome());
             }
-
             sb.append(", ");
         }
         if (sb.length() > 2) {
