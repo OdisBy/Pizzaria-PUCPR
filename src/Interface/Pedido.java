@@ -54,7 +54,12 @@ public class Pedido implements Serializable {
     public String getItensAsString() {
         StringBuilder sb = new StringBuilder();
         for (ItemCarrinho item : itens) {
-            sb.append(item.getNome());
+            if(item.getTamanho() != null){
+                sb.append(item.getNome() + " (" + item.getTamanho() + ")");
+            } else {
+                sb.append(item.getNome());
+            }
+
             sb.append(", ");
         }
         if (sb.length() > 2) {
