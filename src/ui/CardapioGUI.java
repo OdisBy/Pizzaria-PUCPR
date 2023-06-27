@@ -23,6 +23,8 @@ public class CardapioGUI extends JFrame {
     private HomeGUI homeUi = new HomeGUI();
     private PedidosGUI pedidosGUI;
     private Pedido pedidoAtual;
+    private JTable pizzasTable;
+    private JTable bebidasTable;
 
 
     public CardapioGUI() {
@@ -103,7 +105,7 @@ public class CardapioGUI extends JFrame {
         Object[][] pizzasData = DataPizzas.cardapioParaTable();
         String[] pizzaColumnNames = {"Sabor", "Ingredientes", "Valor (Média)", "Quantidade"};
         MenuTableModel pizzasModel = new MenuTableModel(pizzasData, pizzaColumnNames);
-        JTable pizzasTable = new JTable(pizzasModel);
+        pizzasTable = new JTable(pizzasModel);
 
 
         TableColumn columnName = pizzasTable.getColumnModel().getColumn(0);
@@ -128,7 +130,7 @@ public class CardapioGUI extends JFrame {
 
 
         MenuTableModel bebidasModel = new MenuTableModel(bebidasData, bebidasColumnNames);
-        JTable bebidasTable = new JTable(bebidasModel);
+        bebidasTable = new JTable(bebidasModel);
 
         bebidasTable.setRowHeight(bebidasTable.getRowHeight() * 4);
 
@@ -234,12 +236,15 @@ public class CardapioGUI extends JFrame {
 
     private void finalizarPedido(MenuTableModel pizzaModel, MenuTableModel bebidaModel) {
         carrinho.clear();
-
         for (int row = 0; row < pizzaModel.getRowCount(); row++) {
             int quantidade = (int) pizzaModel.getValueAt(row, 3);
             if (quantidade > 0) {
                 String pizza = (String) pizzaModel.getValueAt(row, 0);
                 TamanhoPizza tamanho = pedirTamanho(pizza);
+                if(tamanho == null){
+                    carrinho.clear();
+                    return;
+                }
                 ItemCarrinho item = new ItemCarrinho(pizza, tamanho);
                 carrinho.add(item);
             }
@@ -254,6 +259,9 @@ public class CardapioGUI extends JFrame {
             }
         }
 
+        if(carrinho.isEmpty()){
+            return;
+        }
         exibirPedidos();
     }
 
